@@ -17,4 +17,7 @@ If the font isn't automatically recognized, make sure to navigate to `Run > Edit
 
 Apart from these, there are multiple buttons and panels that can be used for different functionalities but those are pretty self-explanatory or have tips directly written near them.
 
+## Further notices
+The base for this project was generated from this public GitHub template:
 
+https://github.com/SFML/cmake-sfml-project
