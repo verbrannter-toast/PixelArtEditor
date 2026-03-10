@@ -4,8 +4,9 @@ This project got developed as a C++ university project by Erik Mettner. It is a 
 
 ## How to run
 
-The project requires SFML (Version 3.0.2) so make sure to have that installed. Apart from that, a custom font is used that should be recognized by default.
+The project requires SFML (Version 3.0.2) and CMake so make sure to have that installed. It was originally written in CLion so I can't guarantee if it will run in other Editors.
 
+Apart from that, a custom font is used that should be recognized by default.
 If the font isn't automatically recognized, make sure to navigate to `Run > Edit Configurations > Working Directory` and set it to the project root.
 
 ## Controls
