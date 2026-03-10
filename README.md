@@ -1,6 +1,6 @@
 # PixelArtEditor
 
-This project got developed as a C++ uni project by Erik Mettner. It is a simple Pixel Art Editor that features a color picker, different brush shapes and sizes and an option to resize the canvas up to 999 * 999 pixels. 
+This project got developed as a C++ university project by Erik Mettner. It is a simple Pixel Art Editor that features a color picker, different brush shapes and sizes and an option to resize the canvas up to 999 * 999 pixels. 
 
 ## How to run
 
