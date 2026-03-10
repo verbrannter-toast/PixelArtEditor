@@ -4,7 +4,7 @@
 
 class CanvasSizeDialog {
 public:
-    explicit CanvasSizeDialog(sf::Font& font);
+    explicit CanvasSizeDialog(sf::Font* font);
 
     void open(int currentW, int currentH);
     void close();
@@ -16,7 +16,7 @@ public:
     bool consumeConfirm(int& outW, int& outH);
 
 private:
-    sf::Font& m_font;
+    sf::Font* m_font;
     bool      m_open = false;
 
     std::string m_wStr, m_hStr;

@@ -4,7 +4,7 @@
 
 class Toolbar {
 public:
-    Toolbar(sf::Vector2f position, float width, sf::Font& font);
+    Toolbar(sf::Vector2f position, float width, sf::Font* font);
 
     void handleEvent(const sf::Event& event, sf::RenderWindow& window, const sf::View& view);
     void draw(sf::RenderWindow& window);
@@ -20,7 +20,7 @@ public:
 private:
     sf::Vector2f m_pos;
     float        m_width;
-    sf::Font&    m_font;
+    sf::Font*    m_font;
 
     BrushShape m_shape     = BrushShape::Round;
     int        m_brushSize = 1;

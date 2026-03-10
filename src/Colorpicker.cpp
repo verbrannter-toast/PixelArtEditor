@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
+#include <cstdio>
 
 static constexpr float HUE_BAR_WIDTH = 18.f;
 static constexpr float SWATCH_HEIGHT = 24.f;
@@ -49,6 +50,7 @@ ColorPicker::ColorPicker(sf::Vector2f position, float size)
     auto sv = svRect();
     auto hu = hueRect();
 
+    // SFML 3: sf::Texture is constructed with a size vector, no create()
     m_svTexture  = sf::Texture(sf::Vector2u(
         static_cast<unsigned>(sv.size.x),
         static_cast<unsigned>(sv.size.y)));
@@ -174,43 +176,86 @@ void ColorPicker::handleEvent(const sf::Event& event, sf::RenderWindow& window, 
 
 // draw
 void ColorPicker::draw(sf::RenderWindow& window) {
+    // panel background
+    float panelH = static_cast<float>(window.getSize().y);
+    sf::RectangleShape panel({m_size + 16.f, panelH});
+    panel.setPosition({m_pos.x - 8.f, 0.f});
+    panel.setFillColor(sf::Color(30, 30, 36));
+    window.draw(panel);
+
+    // left border
+    sf::RectangleShape border({1.f, panelH});
+    border.setPosition({m_pos.x - 8.f, 0.f});
+    border.setFillColor(sf::Color(55, 55, 65));
+    window.draw(border);
+
+    // border around SV square
+    auto sv = svRect();
+    sf::RectangleShape svBorder({sv.size.x + 2.f, sv.size.y + 2.f});
+    svBorder.setPosition({sv.position.x - 1.f, sv.position.y - 1.f});
+    svBorder.setFillColor(sf::Color::Transparent);
+    svBorder.setOutlineColor(sf::Color(55, 55, 65));
+    svBorder.setOutlineThickness(1.f);
+    window.draw(svBorder);
     window.draw(*m_svSprite);
+
+    // border around hue bar
+    auto hu = hueRect();
+    sf::RectangleShape huBorder({hu.size.x + 2.f, hu.size.y + 2.f});
+    huBorder.setPosition({hu.position.x - 1.f, hu.position.y - 1.f});
+    huBorder.setFillColor(sf::Color::Transparent);
+    huBorder.setOutlineColor(sf::Color(55, 55, 65));
+    huBorder.setOutlineThickness(1.f);
+    window.draw(huBorder);
     window.draw(*m_hueSprite);
 
-    // SV crosshair cursor
-    auto sv = svRect();
+    // SV cursor
     float cx = sv.position.x + m_sat * sv.size.x;
     float cy = sv.position.y + (1.f - m_val) * sv.size.y;
-    sf::CircleShape cursor(5.f);
-    cursor.setOrigin({5.f, 5.f});
-    cursor.setPosition({cx, cy});
-    cursor.setFillColor(sf::Color::Transparent);
-    cursor.setOutlineColor(sf::Color::White);
-    cursor.setOutlineThickness(2.f);
-    window.draw(cursor);
-    cursor.setOutlineColor(sf::Color::Black);
-    cursor.setOutlineThickness(1.f);
-    cursor.setRadius(6.f);
-    cursor.setOrigin({6.f, 6.f});
-    window.draw(cursor);
+    // outer dark ring
+    sf::CircleShape cursorOuter(6.f);
+    cursorOuter.setOrigin({6.f, 6.f});
+    cursorOuter.setPosition({cx, cy});
+    cursorOuter.setFillColor(sf::Color::Transparent);
+    cursorOuter.setOutlineColor(sf::Color(0, 0, 0, 160));
+    cursorOuter.setOutlineThickness(2.f);
+    window.draw(cursorOuter);
+    // inner white ring
+    sf::CircleShape cursorInner(5.f);
+    cursorInner.setOrigin({5.f, 5.f});
+    cursorInner.setPosition({cx, cy});
+    cursorInner.setFillColor(sf::Color::Transparent);
+    cursorInner.setOutlineColor(sf::Color::White);
+    cursorInner.setOutlineThickness(1.5f);
+    window.draw(cursorInner);
 
     // hue cursor
-    auto hu = hueRect();
     float hy = hu.position.y + (m_hue / 360.f) * hu.size.y;
-    sf::RectangleShape hcursor({hu.size.x + 4.f, 3.f});
-    hcursor.setOrigin({2.f, 1.5f});
-    hcursor.setPosition({hu.position.x, hy});
-    hcursor.setFillColor(sf::Color::White);
-    hcursor.setOutlineColor(sf::Color::Black);
-    hcursor.setOutlineThickness(1.f);
-    window.draw(hcursor);
+    // left notch
+    sf::RectangleShape notchL({4.f, 3.f});
+    notchL.setOrigin({4.f, 1.5f});
+    notchL.setPosition({hu.position.x, hy});
+    notchL.setFillColor(sf::Color::White);
+    window.draw(notchL);
+    // right notch
+    sf::RectangleShape notchR({4.f, 3.f});
+    notchR.setOrigin({0.f, 1.5f});
+    notchR.setPosition({hu.position.x + hu.size.x, hy});
+    notchR.setFillColor(sf::Color::White);
+    window.draw(notchR);
 
     // color swatch
     auto sw = swatchRect();
+    // checkerboard behind swatch (in case I add an alpha channel later)
     sf::RectangleShape swatch({sw.size.x, sw.size.y});
     swatch.setPosition({sw.position.x, sw.position.y});
     swatch.setFillColor(m_currentColor);
-    swatch.setOutlineColor(sf::Color(100,100,100));
+    swatch.setOutlineColor(sf::Color(55, 55, 65));
     swatch.setOutlineThickness(1.f);
     window.draw(swatch);
+
+    // hex label overlay on swatch
+    char hex[8];
+    std::snprintf(hex, sizeof(hex), "#%02X%02X%02X",
+                  m_currentColor.r, m_currentColor.g, m_currentColor.b);
 }

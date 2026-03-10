@@ -87,34 +87,40 @@ void Canvas::paint(sf::Vector2f mousePos, sf::Vector2f offset,
 }
 
 void Canvas::draw(sf::RenderWindow& window, sf::Vector2f offset) {
-    // white background
-    sf::RectangleShape bg(sf::Vector2f(
-        static_cast<float>(m_width  * m_pixelSize),
-        static_cast<float>(m_height * m_pixelSize)));
-    bg.setPosition(offset);
-    bg.setFillColor(sf::Color::White);
-    bg.setOutlineColor(sf::Color(180, 180, 180));
-    bg.setOutlineThickness(1.f);
-    window.draw(bg);
+    float cw = static_cast<float>(m_width  * m_pixelSize);
+    float ch = static_cast<float>(m_height * m_pixelSize);
 
-    // individual pixels
+    // canvas border and little drop shadow
+    sf::RectangleShape shadow({cw + 2.f, ch + 2.f});
+    shadow.setPosition({offset.x + 4.f, offset.y + 4.f});
+    shadow.setFillColor(sf::Color(0, 0, 0, 80));
+    window.draw(shadow);
+
+    sf::RectangleShape border({cw, ch});
+    border.setPosition(offset);
+    border.setFillColor(sf::Color::Transparent);
+    border.setOutlineColor(sf::Color(55, 55, 65));
+    border.setOutlineThickness(1.f);
+    window.draw(border);
+
+    // pixels
     sf::Transform t;
     t.translate(offset);
     window.draw(m_vertices, t);
 
     // grid (only appears when zoomed in enough)
-    if (m_pixelSize >= 8) {
+    if (m_pixelSize >= 6) {
         sf::VertexArray grid(sf::PrimitiveType::Lines);
-        sf::Color gridColor(220, 220, 220, 180);
+        sf::Color gridColor(0, 0, 0, 40);
         for (int x = 0; x <= m_width; ++x) {
             float fx = offset.x + x * m_pixelSize;
-            grid.append({{fx, offset.y}, gridColor});
+            grid.append({{fx, offset.y},  gridColor});
             grid.append({{fx, offset.y + m_height * m_pixelSize}, gridColor});
         }
         for (int y = 0; y <= m_height; ++y) {
             float fy = offset.y + y * m_pixelSize;
-            grid.append({{offset.x,fy}, gridColor});
-            grid.append({{offset.x + m_width * m_pixelSize,fy}, gridColor});
+            grid.append({{offset.x, fy}, gridColor});
+            grid.append({{offset.x + m_width * m_pixelSize, fy}, gridColor});
         }
         window.draw(grid);
     }

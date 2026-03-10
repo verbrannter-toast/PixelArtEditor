@@ -1,7 +1,7 @@
 #include "CanvasSizeDialog.h"
 #include <algorithm>
 
-CanvasSizeDialog::CanvasSizeDialog(sf::Font& font) : m_font(font) {}
+CanvasSizeDialog::CanvasSizeDialog(sf::Font* font) : m_font(font) {}
 
 void CanvasSizeDialog::open(int w, int h) {
     m_wStr = std::to_string(w);
@@ -21,29 +21,27 @@ bool CanvasSizeDialog::consumeConfirm(int& outW, int& outH) {
 }
 
 // layout
-sf::FloatRect CanvasSizeDialog::dialogRect(sf::RenderWindow& /*w*/) const {
-    // Use fixed logical size, not physical window size
-    constexpr float LOGICAL_W = 1100.f, LOGICAL_H = 750.f;
-    float dw = 280.f, dh = 190.f;
-    return sf::FloatRect(
-        {(LOGICAL_W - dw)/2.f, (LOGICAL_H - dh)/2.f},
-        {dw, dh});
+sf::FloatRect CanvasSizeDialog::dialogRect(sf::RenderWindow& w) const {
+    float dw = 480.f, dh = 320.f;
+    float wx = static_cast<float>(w.getSize().x);
+    float wy = static_cast<float>(w.getSize().y);
+    return sf::FloatRect({ (wx - dw) / 2.f, (wy - dh) / 2.f }, { dw, dh });
 }
 sf::FloatRect CanvasSizeDialog::wFieldRect(sf::FloatRect d) const {
-    return sf::FloatRect({d.position.x+16, d.position.y+48},
-                         {d.size.x/2.f - 24, 30});
+    return sf::FloatRect({d.position.x + 24.f, d.position.y + 90.f},
+                         {d.size.x / 2.f - 36.f, 50.f});
 }
 sf::FloatRect CanvasSizeDialog::hFieldRect(sf::FloatRect d) const {
-    return sf::FloatRect({d.position.x + d.size.x/2.f + 8, d.position.y+48},
-                         {d.size.x/2.f - 24, 30});
+    return sf::FloatRect({d.position.x + d.size.x / 2.f + 12.f, d.position.y + 90.f},
+                         {d.size.x / 2.f - 36.f, 50.f});
 }
 sf::FloatRect CanvasSizeDialog::okBtnRect(sf::FloatRect d) const {
-    return sf::FloatRect({d.position.x + d.size.x/2.f + 8, d.position.y + d.size.y - 46},
-                         {80, 30});
+    return sf::FloatRect({d.position.x + d.size.x - 130.f, d.position.y + d.size.y - 66.f},
+                         {106.f, 44.f});
 }
 sf::FloatRect CanvasSizeDialog::cancelBtnRect(sf::FloatRect d) const {
-    return sf::FloatRect({d.position.x + d.size.x/2.f - 88, d.position.y + d.size.y - 46},
-                         {80, 30});
+    return sf::FloatRect({d.position.x + d.size.x - 250.f, d.position.y + d.size.y - 66.f},
+                         {106.f, 44.f});
 }
 
 // events
@@ -106,23 +104,23 @@ void CanvasSizeDialog::handleEvent(const sf::Event& event, sf::RenderWindow& win
 // draw
 void CanvasSizeDialog::drawField(sf::RenderWindow& w, sf::FloatRect r,
                                   const std::string& label, const std::string& val, bool active) {
-    sf::Text lbl(m_font, label, 11);
-    lbl.setFillColor(sf::Color(160,160,160));
-    lbl.setPosition({r.position.x, r.position.y - 16.f});
+    sf::Text lbl(*m_font, label, 30);
+    lbl.setFillColor(sf::Color(110, 112, 120));
+    lbl.setPosition({r.position.x, r.position.y - 36.f});
     w.draw(lbl);
 
     sf::RectangleShape box({r.size.x, r.size.y});
     box.setPosition({r.position.x, r.position.y});
-    box.setFillColor(sf::Color(30, 32, 34));
-    box.setOutlineColor(active ? sf::Color(80, 140, 220) : sf::Color(80, 83, 85));
-    box.setOutlineThickness(active ? 2.f : 1.f);
+    box.setFillColor(sf::Color(18, 18, 22));
+    box.setOutlineColor(active ? sf::Color(72, 152, 168) : sf::Color(55, 55, 65));
+    box.setOutlineThickness(1.f);
     w.draw(box);
 
-    sf::Text txt(m_font, val + (active ? "|" : ""), 14);
-    txt.setFillColor(sf::Color::White);
+    sf::Text txt(*m_font, val + (active ? "|" : ""), 30);
+    txt.setFillColor(sf::Color(188, 190, 196));
     auto tb = txt.getLocalBounds();
-    txt.setPosition({r.position.x + 6.f,
-                     r.position.y + (r.size.y - tb.size.y)/2.f - tb.position.y});
+    txt.setPosition({r.position.x + 10.f,
+                     r.position.y + (r.size.y - tb.size.y) / 2.f - tb.position.y});
     w.draw(txt);
 }
 
@@ -131,46 +129,65 @@ void CanvasSizeDialog::drawBtn(sf::RenderWindow& w, sf::FloatRect r,
     sf::RectangleShape btn({r.size.x, r.size.y});
     btn.setPosition({r.position.x, r.position.y});
     btn.setFillColor(col);
-    btn.setOutlineColor(sf::Color(0,0,0,60));
+    btn.setOutlineColor(sf::Color(55, 55, 65));
     btn.setOutlineThickness(1.f);
     w.draw(btn);
 
-    sf::Text txt(m_font, label, 13);
-    txt.setFillColor(sf::Color::White);
+    sf::Text txt(*m_font, label, 30);
+    txt.setFillColor(sf::Color(188, 190, 196));
     auto tb = txt.getLocalBounds();
-    txt.setPosition({r.position.x + (r.size.x - tb.size.x)/2.f - tb.position.x,
-                     r.position.y + (r.size.y - tb.size.y)/2.f - tb.position.y});
+    txt.setPosition({r.position.x + (r.size.x - tb.size.x) / 2.f - tb.position.x,
+                     r.position.y + (r.size.y - tb.size.y) / 2.f - tb.position.y});
     w.draw(txt);
 }
 
 void CanvasSizeDialog::draw(sf::RenderWindow& window) {
     if (!m_open) return;
 
-    sf::RectangleShape overlay(sf::Vector2f(1100.f, 750.f));
-    overlay.setFillColor(sf::Color(0, 0, 0, 140));
+    sf::RectangleShape overlay(sf::Vector2f(window.getSize()));
+    overlay.setFillColor(sf::Color(0, 0, 0, 160));
     window.draw(overlay);
 
     auto dlg = dialogRect(window);
+
+    sf::RectangleShape shadow({dlg.size.x + 10.f, dlg.size.y + 10.f});
+    shadow.setPosition({dlg.position.x - 5.f, dlg.position.y - 5.f});
+    shadow.setFillColor(sf::Color(0, 0, 0, 100));
+    window.draw(shadow);
+
     sf::RectangleShape box({dlg.size.x, dlg.size.y});
     box.setPosition({dlg.position.x, dlg.position.y});
-    box.setFillColor(sf::Color(50, 52, 55));
-    box.setOutlineColor(sf::Color(70, 73, 76));
+    box.setFillColor(sf::Color(30, 30, 36));
+    box.setOutlineColor(sf::Color(55, 55, 65));
     box.setOutlineThickness(1.f);
     window.draw(box);
 
-    sf::Text title(m_font, "Canvas Size", 15);
-    title.setFillColor(sf::Color(220, 220, 220));
-    title.setPosition({dlg.position.x + 16.f, dlg.position.y + 14.f});
+    // title bar
+    float titleH = 44.f;
+    sf::RectangleShape titleBar({dlg.size.x, titleH});
+    titleBar.setPosition({dlg.position.x, dlg.position.y});
+    titleBar.setFillColor(sf::Color(22, 22, 27));
+    window.draw(titleBar);
+    sf::RectangleShape titleBorder({dlg.size.x, 1.f});
+    titleBorder.setPosition({dlg.position.x, dlg.position.y + titleH});
+    titleBorder.setFillColor(sf::Color(55, 55, 65));
+    window.draw(titleBorder);
+
+    sf::Text title(*m_font, "Resize Canvas", 36);
+    title.setFillColor(sf::Color(188, 190, 196));
+    auto tb = title.getLocalBounds();
+    title.setPosition({dlg.position.x + 16.f,
+                       dlg.position.y + (titleH - tb.size.y) / 2.f - tb.position.y});
     window.draw(title);
 
     drawField(window, wFieldRect(dlg), "Width",  m_wStr, m_activeField == 0);
     drawField(window, hFieldRect(dlg), "Height", m_hStr, m_activeField == 1);
 
-    sf::Text hint(m_font, "1-512 px  |  Tab = switch field  |  Enter = confirm", 10);
-    hint.setFillColor(sf::Color(120,120,120));
-    hint.setPosition({dlg.position.x + 16.f, dlg.position.y + dlg.size.y - 68.f});
+    sf::Text hint(*m_font, "Tab = switch    Enter = confirm    Esc = cancel", 30);
+    hint.setFillColor(sf::Color(80, 82, 90));
+    hint.setPosition({dlg.position.x + 24.f, dlg.position.y + dlg.size.y - 120.f});
     window.draw(hint);
 
-    drawBtn(window, cancelBtnRect(dlg), "Cancel", sf::Color(70, 73, 76));
-    drawBtn(window, okBtnRect(dlg),     "OK",     sf::Color(60, 120, 200));
+    drawBtn(window, cancelBtnRect(dlg), "Cancel", sf::Color(45, 47, 55));
+    drawBtn(window, okBtnRect(dlg),     "OK",     sf::Color(45, 95, 108));
 }
