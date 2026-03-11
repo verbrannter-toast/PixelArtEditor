@@ -15,8 +15,8 @@ int main() {
     sf::RenderWindow window( // no window resizing because of issues with the grid I wasn't able to fix
         sf::VideoMode({WIN_W, WIN_H}),
         "Pixel Art Editor",
-        sf::Style::Close);
-    window.setFramerateLimit(60);
+        sf::Style::None); // borderless window
+    window.setFramerateLimit(360);
 
     // font
     sf::Font font;
