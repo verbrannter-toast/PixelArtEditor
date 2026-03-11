@@ -5,11 +5,11 @@
 
 static constexpr float PAD            = 16.f;
 static constexpr float BTN_H          = 44.f;
-static constexpr float SECTION_LABEL_H = 24.f;
+static constexpr float SECTION_LABEL_H = 30.f;
 static constexpr float RULE_H          = 14.f;
-static constexpr float FONT_LABEL      = 22.f;
-static constexpr float FONT_BTN        = 22.f;
-static constexpr float FONT_VALUE      = 26.f;
+static constexpr float FONT_LABEL      = 30.f;
+static constexpr float FONT_BTN        = 30.f;
+static constexpr float FONT_VALUE      = 30.f;
 static constexpr float SLIDER_H        = 10.f;
 static constexpr float WELL_SIZE       = 60.f;
 
@@ -32,14 +32,17 @@ static ToolbarLayout computeLayout(float posY, float width) {
     L.bw = (width - PAD * 3.f) / 2.f;
 
     float cur = posY + PAD;
-    L.roundBtnY  = cur + SECTION_LABEL_H + 4.f;
+
+    //brush shape section
+    L.roundBtnY  = cur + SECTION_LABEL_H + 20.f;
     L.squareBtnY = L.roundBtnY;
     cur = L.roundBtnY + BTN_H + RULE_H;
 
+    // brush size section
     L.sliderLabelY = cur;
     cur += SECTION_LABEL_H + 4.f;
     L.sliderValueY = cur;
-    cur += SECTION_LABEL_H + 6.f;
+    cur += SECTION_LABEL_H + 2.f;
     L.sliderY = cur;
     cur += SLIDER_H + PAD;
 
@@ -49,8 +52,9 @@ static ToolbarLayout computeLayout(float posY, float width) {
     L.ruleBelowPreviewY = cur;
     cur += RULE_H;
 
+    // Canvas section
     L.canvasLabelY = cur;
-    cur += SECTION_LABEL_H + 4.f;
+    cur += SECTION_LABEL_H + 20.f;
     L.resizeBtnY = cur;
     cur += BTN_H + PAD / 2.f;
     L.clearBtnY  = cur;
