@@ -3,11 +3,16 @@
 This project got developed as a C++ university project by Erik Mettner. It is a simple Pixel Art Editor that features a color picker, different brush shapes and sizes and an option to resize the canvas up to 999 * 999 pixels. 
 
 ## How to run
+### Inside of Clion
 
 The project requires SFML (Version 3.0.2) and CMake so make sure to have that installed. It was originally written in CLion so I can't guarantee if it will run in other Editors.
 
 Apart from that, a custom font is used that should be recognized by default.
-If the font isn't automatically recognized, make sure to navigate to `Run > Edit Configurations > Working Directory` and set it to the project root.
+If the font isn't automatically recognized, make sure to navigate to `Run > Edit Configurations > Working Directory` and set it to `/src`.
+
+### Using the executable
+
+Alternatively, the directory `/executable` features the needed custom font, `.dll` files and the executable `main.exe` in order to run the software directly.
 
 ## Controls
 
