@@ -19,6 +19,14 @@ If the font isn't automatically recognized, make sure to navigate to `Run > Edit
 Apart from these, there are multiple buttons and panels that can be used for different functionalities but those are pretty self-explanatory or have tips directly written near them.
 
 ## Further notices
+### Use of AI
+
+I used Claude for helping me with issues I encountered after a SFML update that wasn't properly or at all documented in any tutorial video I watched. 
+
+Apart from that, I used it to optimize my code for the canvas layout and navigation (zooming and dragging) since my original layout code for it was really messy and I had several weird sizing issues trying to move the canvas for zooming and dragging.
+
+### Template used
+
 The base for this project was generated from this public GitHub template:
 
 https://github.com/SFML/cmake-sfml-project
