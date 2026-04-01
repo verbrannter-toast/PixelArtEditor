@@ -21,7 +21,7 @@ int main() {
     // font
     sf::Font font;
     bool fontLoaded =
-        font.openFromFile("src/fonts/AsepriteFont.ttf");
+        font.openFromFile("fonts/AsepriteFont.ttf");
     (void)fontLoaded;
 
     // subelements
